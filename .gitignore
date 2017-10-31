@@ -109,4 +109,4 @@ ENV/
 out
 gen
 
-.txt
+*.txt

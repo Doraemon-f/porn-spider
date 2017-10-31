@@ -108,3 +108,5 @@ ENV/
 *.iml
 out
 gen
+
+.txt

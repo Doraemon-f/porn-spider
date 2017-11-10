@@ -19,9 +19,9 @@ def __get_href_and_title(line):
 def __get_content(html, title):
     soup = BeautifulSoup(html, 'html.parser')
     content = soup.find('div', class_='tpc_content do_not_catch').get_text(strip=True).encode('utf8')
-    if not os.path.exists('article'):
-        os.mkdir('article')
-    porn_article = open('article/' + title + '.txt', 'w+')
+    if not os.path.exists('files'):
+        os.mkdir('files')
+    porn_article = open('files/' + title + '.txt', 'w+')
     porn_article.write(content)
     porn_article.close()
 

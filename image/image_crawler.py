@@ -13,36 +13,40 @@ import urllib
 import requests
 import shutil
 
-r = requests.get('http://s9tu.com/images/2017/10/24/TIM20171024093834287c8.jpg', stream=True)
-if r.status_code == 200:
-    with open('xxxxxxx.jpg', 'wb') as f:
-        r.raw.decode_content = True
-        shutil.copyfileobj(r.raw, f)
 
-# def __get_href_and_title(line):
-#     line_xml = BeautifulSoup(line, 'html.parser')
-#     return line_xml.h3.a['href'], line_xml.h3.string
-#
-#
-# def __get_content(html, title):
-#     soup = BeautifulSoup(html, 'html.parser')
-#     content = soup.find('div', class_='tpc_content do_not_catch').get_text(strip=True).encode('utf8')
-#     if not os.path.exists('article'):
-#         os.mkdir('article')
-#     porn_article = open('article/' + title + '.txt', 'w+')
-#     porn_article.write(content)
-#     porn_article.close()
-#
-#
-# def __get_image(line):
-#     href, title = __get_href_and_title(line)
-#     if 'htm_data' in href:
-#         url = http.DOMAIN + href
-#         html = http.fetch(url)
-#         __get_content(html, title)
-#
-#
-# tags = open('images.txt', 'r')
-# for url_tag in tags.readlines():
-#     __get_image(url_tag)
-#
+def __get_picture(url):
+    response = requests.get(url, stream=True)
+    if response.status_code == 200:
+        with open(url, 'wb+') as f:
+            response.raw.decode_content = True
+            shutil.copyfileobj(response.raw, f)
+
+
+def __get_content(html, title):
+    if not os.path.exists('pictures'):
+        os.mkdir('pictures')
+    if not os.path.exists('pictures/' + title):
+        os.mkdir('pictures/' + title)
+    soup = BeautifulSoup(html, 'html.parser')
+    images = soup.find_all('input', type='image')
+    for image in images:
+        print image['src']
+        __get_picture(image['src'])
+
+
+def __get_href_and_title(line):
+    line_xml = BeautifulSoup(line, 'html.parser')
+    return line_xml.h3.a['href'], line_xml.h3.string
+
+
+def __get_image(line):
+    href, title = __get_href_and_title(line)
+    if 'htm_data' in href:
+        url = http.DOMAIN + href
+        html = http.fetch(url)
+        __get_content(html, title)
+
+
+tags = open('images.txt', 'r')
+for url_tag in tags.readlines():
+    __get_image(url_tag)

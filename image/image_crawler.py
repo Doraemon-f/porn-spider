@@ -12,14 +12,26 @@ from bs4 import BeautifulSoup
 import urllib
 import requests
 import shutil
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-def __get_picture(url):
-    response = requests.get(url, stream=True)
-    if response.status_code == 200:
-        with open(url, 'wb+') as f:
-            response.raw.decode_content = True
-            shutil.copyfileobj(response.raw, f)
+def __get_picture(url, title, index):
+    try:
+        response = requests.get(url, stream=True, timeout=2, verify=False)
+        if response.status_code == 200:
+            with open('pictures/' + title + '/' + str(index) + '.jpg', 'wb') as f:
+                response.raw.decode_content = True
+                shutil.copyfileobj(response.raw, f)
+    except requests.exceptions.ConnectTimeout as e:
+        print 'connect time out'
+    except requests.exceptions.ReadTimeout as e:
+        print 'read time out'
+    except requests.exceptions.SSLError as e:
+        print 'ssl error'
+    except urllib3.exceptions.ReadTimeoutError as e:
+        print 'read time out'
 
 
 def __get_content(html, title):
@@ -29,9 +41,9 @@ def __get_content(html, title):
         os.mkdir('pictures/' + title)
     soup = BeautifulSoup(html, 'html.parser')
     images = soup.find_all('input', type='image')
-    for image in images:
+    for index, image in enumerate(images):
         print image['src']
-        __get_picture(image['src'])
+        __get_picture(image['src'], title, index)
 
 
 def __get_href_and_title(line):

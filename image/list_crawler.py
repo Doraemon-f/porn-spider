@@ -9,7 +9,7 @@ import common.http_util as http
 from bs4 import BeautifulSoup
 import re
 
-PORN_HOME_PAGE_URL = http.DOMAIN + 'thread0806.php'
+PORN_HOME_PAGE_URL = http.DOMAIN + 'index.php'
 
 url = PORN_HOME_PAGE_URL + '?fid=16&search=&page=1'
 soup = BeautifulSoup(http.fetch(url), 'html.parser')

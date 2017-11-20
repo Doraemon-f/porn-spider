@@ -13,6 +13,7 @@ import urllib
 import requests
 import shutil
 import urllib3
+import urllib2
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -32,6 +33,8 @@ def __get_picture(url, title, index):
         print 'ssl error'
     except urllib3.exceptions.ReadTimeoutError as e:
         print 'read time out'
+    except urllib2.HTTPError as e:
+        print '404: not found'
 
 
 def __get_content(html, title):

@@ -112,3 +112,5 @@ gen
 *.txt
 *.jpg
 *.png
+*.gif
+*.DS_Store

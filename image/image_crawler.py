@@ -35,6 +35,8 @@ def __get_picture(url, title, index):
         print 'read time out'
     except urllib2.HTTPError as e:
         print '404: not found'
+    except requests.exceptions.ConnectionError as e:
+        print 'connect error'
 
 
 def __get_content(html, title):
